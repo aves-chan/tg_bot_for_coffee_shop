@@ -1,0 +1,5 @@
+TOKEN = ""
+
+PASSWORD_POSTGRESQL = ""
+
+IP_MY_SERVER = ""
