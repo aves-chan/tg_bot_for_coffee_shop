@@ -3,6 +3,13 @@
 
 # ПЕРВАЯ НАСТРОЙКА
 
+### ИСПОЛЬЗУЕМЫЕ ФРЕЙМВОРКИ
+aiogram `pip install aiogram`\
+FastAPI `pip install fastapi`\
+psycopg2(для работы с postgresql) `pip install psycopg2-binary`\
+uvicorn(ASGI) `pip install "uvicorn[standard]"`\
+NGINX(веб-серврер) [официальный сайт nginx для установки](https://nginx.org/ru/download.html)
+
 ### ПЕРЕОПРЕДЕЛЕНИЕ ПЕРЕМЕННЫХ
 Обязательно перед использованием нужно в модуле `config.py` определить переменные:
 
