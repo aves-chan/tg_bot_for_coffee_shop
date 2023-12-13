@@ -23,7 +23,7 @@ def kb_order_main_menu():
 def kb_order_drinks_menu():
     button1 = InlineKeyboardButton(text="Кофе", callback_data="Кофе")
     button2 = InlineKeyboardButton(text="Чай", callback_data="Чай")
-    button3 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+    button3 = InlineKeyboardButton(text="Назад к главному меню", callback_data="Назад к главному меню")
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
     return kb
 

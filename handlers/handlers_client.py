@@ -28,6 +28,11 @@ async def handler_order_user(cd: types.CallbackQuery, state: FSMContext):
     await cd.message.delete()
     await cd.message.answer(text="<b>Выбери категорию</b>", parse_mode=ParseMode.HTML, reply_markup=kb_order_main_menu())
     await cd.answer()
+@client_router.callback_query(StateFilter(Client_state.drinks_order_state), F.data == "Назад к главному меню")
+async def handler_on_cancel_order_user(cd: types.CallbackQuery, state: FSMContext):
+    await cd.message.delete()
+    await cd.message.answer(text="<b>Выбери категорию</b>", parse_mode=ParseMode.HTML, reply_markup=kb_order_main_menu())
+    await cd.answer()
 
 @client_router.callback_query(StateFilter(Client_state.start_order_state))
 async def handler_main_categories_user(cd: types.CallbackQuery, state: FSMContext):
