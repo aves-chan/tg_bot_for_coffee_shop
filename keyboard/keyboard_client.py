@@ -33,7 +33,7 @@ def kb_order_drinks_coffee():
     button3 = InlineKeyboardButton(text="Флет уйат", callback_data="Флет уйат")
     button4 = InlineKeyboardButton(text="Амрерикано", callback_data="Амрерикано")
     button5 = InlineKeyboardButton(text="Эспрессо", callback_data="Эспрессо")
-    button6 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+    button6 = InlineKeyboardButton(text="Назад к выбору напитков", callback_data="Назад к выбору напитков")
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3, button4], [button5], [button6]])
     return kb
 
@@ -43,6 +43,6 @@ def kb_order_drinks_tea():
     button3 = InlineKeyboardButton(text="Красный", callback_data="Красный")
     button4 = InlineKeyboardButton(text="Цветочный", callback_data="Цветочный")
     button5 = InlineKeyboardButton(text="Фирменный", callback_data="Фирменный")
-    button6 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+    button6 = InlineKeyboardButton(text="Назад к выбору напитков", callback_data="Назад к выбору напитков")
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3, button4], [button5], [button6]])
     return kb
