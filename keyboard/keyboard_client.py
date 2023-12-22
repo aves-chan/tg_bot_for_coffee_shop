@@ -20,7 +20,25 @@ def kb_order_main_menu():
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1], [button2, button3], [button4]])
     return kb
 
-def kb_order_drinks_menu():
+
+""" ЕДА """
+def kb_order_meal_category():
+    button1 = InlineKeyboardButton(text="Завтраки", callback_data="Завтраки")
+    button2 = InlineKeyboardButton(text="Сэндвичи", callback_data="Сэндвичи")
+    button3 = InlineKeyboardButton(text="Назад к главному меню", callback_data="Назад к главному меню")
+    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
+    return kb
+
+
+
+
+"""КОНЕЦ ЕДЫ """
+
+
+
+""" НАПИТКИ """
+
+def kb_order_drinks_category():
     button1 = InlineKeyboardButton(text="Кофе", callback_data="Кофе")
     button2 = InlineKeyboardButton(text="Чай", callback_data="Чай")
     button3 = InlineKeyboardButton(text="Назад к главному меню", callback_data="Назад к главному меню")
@@ -46,3 +64,5 @@ def kb_order_drinks_tea():
     button6 = InlineKeyboardButton(text="Назад к выбору напитков", callback_data="Назад к выбору напитков")
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3, button4], [button5], [button6]])
     return kb
+
+""" КОНЕЦ НАПИТКОВ """

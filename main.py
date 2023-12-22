@@ -9,7 +9,7 @@ from aiogram.fsm.context import FSMContext
 
 
 from keyboard.keyboard_client import kb_start_client, kb_phone_number
-from handlers import handlers_client, handlers_worker, handlers_owner
+from handlers.handlers_client.handlers_client_order import client_order_router
 from state.state_client import Client_state
 
 dp = Dispatcher()
@@ -38,7 +38,7 @@ async def start(msg: types.Message, state: FSMContext):
 
 
 
-dp.include_routers(handlers_client.client_router)
+dp.include_routers(client_order_router)
 
 
 async def main():
