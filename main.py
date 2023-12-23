@@ -15,7 +15,7 @@ from state.state_client import Client_state
 dp = Dispatcher()
 
 def chek_user(id_telegram: int):
-    conn = psycopg2.connect(dbname="db_users", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
+    conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
     cursor = conn.cursor()
     cursor.execute(f"SELECT tag FROM users WHERE telegram_id = {id_telegram}")
     user = cursor.fetchone()

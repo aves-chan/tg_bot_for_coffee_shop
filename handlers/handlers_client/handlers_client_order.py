@@ -3,13 +3,14 @@ from aiogram.enums import ParseMode
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 
+from handlers.handlers_client.handlers_product_quantity_selection import client_product_quantity_selection_router
 from handlers.handlers_client.handlers_registration_client import client_registration_router
-from sql_queries.sql_client import sandwich_withdrawal, breakfasts_withdrawal
+from sql_queries import sql_client
 from state.state_client import Client_state
 from keyboard.keyboard_client import *
 
 client_order_router = Router()
-client_order_router.include_router(client_registration_router)
+client_order_router.include_routers(client_registration_router, client_product_quantity_selection_router)
 
 
 @client_order_router.callback_query(StateFilter(Client_state.start_order_state), F.data == "Заказать")
@@ -91,23 +92,25 @@ async def handler_on_cancel_drinks_tea_user(cd: types.CallbackQuery, state: FSMC
 @client_order_router.callback_query(StateFilter(Client_state.meal_order_state), F.data != "Назад к главному меню")
 async def handler_category_meal(cd: types.CallbackQuery, state: FSMContext):
     if cd.data == "Завтраки":
-        if breakfasts_withdrawal == None:
+        if sql_client.db_select_all_breakfasts() == None:
             await cd.message.delete()
             await cd.message.answer(text="Закончилось все из этой категории(", reply_markup=kb_order_meal_category())
             await cd.answer()
         else:
+            kb_breakfasts = kb_generating_breakfasts_buttons(sql_client.db_select_all_breakfasts())
             await cd.message.delete()
-            await cd.message.answer(text="Завтраки", reply_markup=)
-            await state.set_state(Client_state.breakfasts_order_state)
+            await cd.message.answer(text="Завтраки", reply_markup=kb_breakfasts.as_markup())
+            await state.set_state(Client_state.breakfasts_quantity_selection_state)
             await cd.answer()
     elif cd.data == "Сэндвичи":
-        if sandwich_withdrawal == None:
+        if sql_client.db_select_all_sandwich() == None:
             await cd.message.delete()
             await cd.message.answer(text="Закончилось все из этой категории(", reply_markup=kb_order_meal_category())
             await cd.answer()
         else:
+            kb_sandwich = kb_generating_sandwich_buttons(sql_client.db_select_all_sandwich())
             await cd.message.delete()
-            await cd.message.answer(text="Сэндвичи", reply_markup=)
-            await state.set_state(Client_state.sandwich_order_state)
+            await cd.message.answer(text="Сэндвичи", reply_markup=kb_sandwich.as_markup())
+            await state.set_state(Client_state.sandwich_quantity_selection_state)
             await cd.answer()
 

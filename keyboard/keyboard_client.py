@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 def kb_phone_number():
@@ -29,8 +30,29 @@ def kb_order_meal_category():
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
     return kb
 
+def kb_generating_sandwich_buttons(array_meal):
+    kb = InlineKeyboardBuilder()
+    for values in array_meal:
+        kb.button(text=values[1], callback_data=str(values[0]))
+    kb.adjust(2)
+    return kb
 
+def kb_generating_breakfasts_buttons(array_meal):
+    kb = InlineKeyboardBuilder()
+    for values in array_meal:
+        kb.button(text=values[1], callback_data=str(values[0]))
+    kb.adjust(2)
+    return kb
 
+def adding_to_cart_meal(array_meal):
+    button1 = InlineKeyboardButton(text="-", callback_data="-")
+    button2 = InlineKeyboardButton(text="1", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+    button3 = InlineKeyboardButton(text="+", callback_data="+")
+    button4 = InlineKeyboardButton(text=f"В наличии: {array_meal[5]}", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+    button5 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
+    button6 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5],[button6]])
+    return kb
 
 """КОНЕЦ ЕДЫ """
 
