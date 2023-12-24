@@ -15,5 +15,5 @@ async def handler_phone_number(msg: types.Message):
                     firstname=msg.from_user.first_name,
                     username=msg.from_user.username,
                     phone_number=msg.contact.phone_number)
-    await msg.answer(reply_markup=ReplyKeyboardRemove)
-    await msg.answer(text="Отлично!", reply_markup=kb_start_client())
+    await msg.answer(text="Успешно!", reply_markup=ReplyKeyboardRemove())
+    await msg.answer(text="Добро пожаловать!", reply_markup=kb_start_client())
