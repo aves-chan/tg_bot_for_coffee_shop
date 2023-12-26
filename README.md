@@ -5,9 +5,8 @@
 
 ### ИСПОЛЬЗУЕМЫЕ ФРЕЙМВОРКИ
 aiogram `pip install aiogram`\
-FastAPI `pip install fastapi`\
+aiohttp `pip install aiohttp`\
 psycopg2(для работы с postgresql) `pip install psycopg2-binary`\
-uvicorn(ASGI) `pip install "uvicorn[standard]"`\
 NGINX(веб-серврер) [официальный сайт nginx для установки](https://nginx.org/ru/download.html)
 
 ### ПЕРЕОПРЕДЕЛЕНИЕ ПЕРЕМЕННЫХ
