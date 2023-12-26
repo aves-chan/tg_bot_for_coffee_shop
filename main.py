@@ -41,9 +41,14 @@ async def start(msg: types.Message, state: FSMContext):
 dp.include_routers(handlers_client.client_router)
 
 
-async def main():
-    bot = Bot(token=config.TOKEN)
-    await dp.start_polling(bot)
+def main() -> None:
+    dp.startup.register(on_startup)
+    bot = Bot(config.TOKEN, parse_mode=ParseMode.HTML)
+    app = web.Application()
+    webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
+    webhook_requests_handler.register(app, path=WEBHOOK_PATH)
+    setup_application(app, dp, bot=bot)
+    web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
