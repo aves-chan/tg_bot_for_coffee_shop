@@ -13,7 +13,7 @@ def db_add_new_user(telegram_id: int, firstname: str, username: str, phone_numbe
 def db_select_one_drink(callback_data):
     conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM products WHERE id = '{callback_data}")
+    cursor.execute(f"SELECT * FROM products WHERE id = {callback_data}")
     drink = cursor.fetchone()
     conn.commit()
     cursor.close()
@@ -23,32 +23,22 @@ def db_select_one_drink(callback_data):
 def db_select_one_meal(callback_data):
     conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM products WHERE id = '{callback_data}")
-    breakfasts = cursor.fetchone()
+    cursor.execute(f"SELECT * FROM products WHERE id = {callback_data}")
+    meal = cursor.fetchone()
     conn.commit()
     cursor.close()
     conn.close()
-    return breakfasts
+    return meal
 
-def db_select_all_drinks(coffee_or_tea):
+def db_select_all_products(products):
     conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL,host=config.IP_MY_SERVER, port="5432")
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM products WHERE type = '{coffee_or_tea}'")
-    sandwiches = cursor.fetchall()
+    cursor.execute(f"SELECT * FROM products WHERE type = '{products}'")
+    products = cursor.fetchall()
     conn.commit()
     cursor.close()
     conn.close()
-    return sandwiches
-
-def db_select_all_meal(breakfasts_or_sandwich):
-    conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL,host=config.IP_MY_SERVER, port="5432")
-    cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM products WHERE type = '{breakfasts_or_sandwich}'")
-    sandwiches = cursor.fetchall()
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return sandwiches
+    return products
 
 
 def db_meal_withdrawal_for_keyboard(breakfasts_or_sandwich):

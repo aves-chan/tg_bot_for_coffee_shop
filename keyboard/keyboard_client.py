@@ -30,21 +30,7 @@ def kb_order_meal_category():
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
     return kb
 
-def kb_generating_sandwich_buttons(array_meal):
-    kb = InlineKeyboardBuilder()
-    for values in array_meal:
-        kb.button(text=values[1], callback_data=str(values[0]))
-    kb.adjust(2)
-    return kb
-
-def kb_generating_breakfasts_buttons(array_meal):
-    kb = InlineKeyboardBuilder()
-    for values in array_meal:
-        kb.button(text=values[1], callback_data=str(values[0]))
-    kb.adjust(2)
-    return kb
-
-def kb_adding_to_cart_any_products(array_any_products):
+def kb_adding_to_cart_meal_or_dessert(array_any_products):
     button1 = InlineKeyboardButton(text="-", callback_data="-")
     button2 = InlineKeyboardButton(text="1", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
     button3 = InlineKeyboardButton(text="+", callback_data="+")
@@ -52,6 +38,15 @@ def kb_adding_to_cart_any_products(array_any_products):
     button5 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
     button6 = InlineKeyboardButton(text="Назад", callback_data="Назад")
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5],[button6]])
+    return kb
+
+def kb_adding_to_cart_drinks():
+    button1 = InlineKeyboardButton(text="-", callback_data="-")
+    button2 = InlineKeyboardButton(text="1", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+    button3 = InlineKeyboardButton(text="+", callback_data="+")
+    button4 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
+    button5 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5]])
     return kb
 
 """КОНЕЦ ЕДЫ """
@@ -67,7 +62,7 @@ def kb_order_drinks_category():
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
     return kb
 
-def kb_add_in_cart_drinks(array_tea, page_number):
+def kb_add_in_cart_all_products(array_tea, page_number):
     kb = InlineKeyboardBuilder()
     for values in array_tea:
         button = InlineKeyboardButton(text=values[1], callback_data=str(values[0]))

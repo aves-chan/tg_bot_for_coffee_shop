@@ -20,7 +20,7 @@ async def handler_breakfasts_quantity_selection(cd: types.CallbackQuery, state: 
         await cd.message.answer(text=f"""<b>{breakfast[1]}</b>
 <b>Описание:</b> {breakfast[2]}
 
-<b>Цена:</b> {breakfast[3]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_any_products(breakfast))
+<b>Цена:</b> {breakfast[3]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_meal_or_dessert(breakfast))
         await state.set_state(Client_state.breakfasts_quantity_selection2_state)
         await cd.answer()
     else:
@@ -28,7 +28,7 @@ async def handler_breakfasts_quantity_selection(cd: types.CallbackQuery, state: 
         await cd.message.answer_photo(photo=breakfast[2], caption=f"""<b>{breakfast[1]}</b>
 <b>Описание:</b> {breakfast[2]}
 
-<b>Цена:</b> {breakfast[3]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_any_products(breakfast))
+<b>Цена:</b> {breakfast[3]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_meal_or_dessert(breakfast))
         await state.set_state(Client_state.breakfasts_quantity_selection2_state)
         await cd.answer()
 
@@ -41,7 +41,7 @@ async def handler_sandwich_quantity_selection(cd: types.CallbackQuery, state: FS
         await cd.message.answer(text=f"""<b>{sandwich[1]}</b>
 <b>Описание:</b> {sandwich[3]}
 
-<b>Цена:</b> {sandwich[4]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_any_products(sandwich))
+<b>Цена:</b> {sandwich[4]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_meal_or_dessert(sandwich))
         await state.set_state(Client_state.sandwich_quantity_selection2_state)
         await cd.answer()
     else:
@@ -49,6 +49,6 @@ async def handler_sandwich_quantity_selection(cd: types.CallbackQuery, state: FS
         await cd.message.answer_photo(photo=sandwich[2], caption=f"""<b>{sandwich[1]}</b>
 <b>Описание:</b> {sandwich[2]}
 
-<b>Цена:</b> {sandwich[3]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_any_products(sandwich))
+<b>Цена:</b> {sandwich[3]}""", parse_mode=ParseMode.HTML, reply_markup=kb_adding_to_cart_meal_or_dessert(sandwich))
         await state.set_state(Client_state.sandwich_quantity_selection2_state)
         await cd.answer()
