@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram import Router, types, F
 from aiogram.enums import ParseMode
 
-from sql_queries.sql_client import db_select_all_drinks, db_select_one_drink
+from sql_queries.sql_client import db_select_one_drink
 from state.state_client import Client_state
 from keyboard.keyboard_client import *
 
