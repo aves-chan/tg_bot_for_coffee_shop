@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.methods import *
 
 from sql_queries import sql_client
-from sql_queries.sql_client import db_select_one_meal
+from sql_queries.sql_client import *
 from state.state_client import Client_state
 from keyboard.keyboard_client import *
 
@@ -14,7 +14,7 @@ client_meal_quantity_selection_router = Router()
 
 @client_meal_quantity_selection_router.callback_query(StateFilter(Client_state.breakfasts_quantity_selection_state))
 async def handler_breakfasts_quantity_selection(cd: types.CallbackQuery, state: FSMContext):
-    breakfast = db_select_one_meal(cd.data)
+    breakfast = db_select_one_product(cd.data)
     if breakfast[2] == None:
         await cd.message.delete()
         await cd.message.answer(text=f"""<b>{breakfast[1]}</b>
@@ -35,7 +35,7 @@ async def handler_breakfasts_quantity_selection(cd: types.CallbackQuery, state: 
 
 @client_meal_quantity_selection_router.callback_query(StateFilter(Client_state.sandwich_quantity_selection_state))
 async def handler_sandwich_quantity_selection(cd: types.CallbackQuery, state: FSMContext):
-    sandwich = db_select_one_meal(cd.data)
+    sandwich = db_select_one_product(cd.data)
     if sandwich[2] == None:
         await cd.message.delete()
         await cd.message.answer(text=f"""<b>{sandwich[1]}</b>

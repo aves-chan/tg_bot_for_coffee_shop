@@ -40,12 +40,12 @@ def kb_adding_to_cart_meal_or_dessert(array_any_products):
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5],[button6]])
     return kb
 
-def kb_adding_to_cart_drinks():
+def kb_adding_to_cart_drinks(product_count):
     button1 = InlineKeyboardButton(text="-", callback_data="-")
-    button2 = InlineKeyboardButton(text="1", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+    button2 = InlineKeyboardButton(text=f"{product_count}шт", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
     button3 = InlineKeyboardButton(text="+", callback_data="+")
     button4 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
-    button5 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+    button5 = InlineKeyboardButton(text="Назад", callback_data="Назад к выбору напитков")
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5]])
     return kb
 
@@ -62,16 +62,16 @@ def kb_order_drinks_category():
     kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
     return kb
 
-def kb_add_in_cart_all_products(array_tea, page_number):
+def kb_add_in_cart_all_products(array_products, page_number, page_number_next, page_number_previous=None):
     kb = InlineKeyboardBuilder()
-    for values in array_tea:
+    for values in array_products:
         button = InlineKeyboardButton(text=values[1], callback_data=str(values[0]))
         kb.add(button)
     kb.adjust(2)
-    button1 = InlineKeyboardButton(text="<-", callback_data="с0")
+    button1 = InlineKeyboardButton(text="<-", callback_data=f"page{page_number_previous}")
     button2 = InlineKeyboardButton(text=f"№{page_number}📄", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-    button3 = InlineKeyboardButton(text="->", callback_data="с6")
-    button4 = InlineKeyboardButton(text="Назад", callback_data="Назад к выбору напитков")
+    button3 = InlineKeyboardButton(text="->", callback_data=f"page{page_number_next}")
+    button4 = InlineKeyboardButton(text="Назад", callback_data="Назад к выбору категорий")
     if page_number == 0:
         kb.row(button2, button3, button4, width=3)
     else:

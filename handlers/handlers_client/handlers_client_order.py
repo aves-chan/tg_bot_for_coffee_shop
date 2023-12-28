@@ -3,11 +3,10 @@ from aiogram.enums import ParseMode
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 
-from handlers.handlers_client.handlers_desserts_quantity_selection import client_desserts_quantity_selection_router
-from handlers.handlers_client.handlers_drinks_quantity_selection import client_drinks_quantity_selection_router
-from handlers.handlers_client.handlers_meal_quantity_selection import client_meal_quantity_selection_router
+from handlers.handlers_client.handlers_client_products.handlers_client_products_desserts.handlers_client_desserts_quantity_selection import client_desserts_quantity_selection_router
+from handlers.handlers_client.handlers_client_products.handlers_client_products_drinks.handlers_client_products_drinks_add_to_cart import client_drinks_quantity_selection_router
+from handlers.handlers_client.handlers_client_products.handlers_client_products_meal.handlers_client_meal_quantity_selection import client_meal_quantity_selection_router
 from handlers.handlers_client.handlers_registration_client import client_registration_router
-from sql_queries import sql_client
 from sql_queries.sql_client import *
 from state.state_client import Client_state
 from keyboard.keyboard_client import *
@@ -47,13 +46,13 @@ async def handler_category_drinks(cd: types.CallbackQuery, state: FSMContext):
         await cd.answer()
     else:
         if cd.data == "Кофе":
-            kb_drinks = kb_add_in_cart_all_products(db_select_all_products("Кофе"), page_number=0)
+            kb_drinks = kb_add_in_cart_all_products(db_select_products_for_generate_keyboard(products="Кофе", offset=0), page_number=0, page_number_next=6)
             await cd.message.delete()
             await cd.message.answer(text="Какое кофе хотите добавить в корзину?", reply_markup=kb_drinks)
             await state.set_state(Client_state.coffee_order_state)
             await cd.answer()
         elif cd.data == "Чай":
-            kb_drinks = kb_add_in_cart_all_products(db_select_all_products("Чай"), page_number=0)
+            kb_drinks = kb_add_in_cart_all_products(db_select_products_for_generate_keyboard(products="Чай", offset=0), page_number=0, page_number_next=6)
             await cd.message.delete()
             await cd.message.answer(text="Какой чай хотите добавить в корзину?", reply_markup=kb_drinks)
             await state.set_state(Client_state.tea_order_state)
@@ -68,7 +67,7 @@ async def handler_category_meal(cd: types.CallbackQuery, state: FSMContext):
             await cd.message.answer(text="Закончилось все из этой категории(", reply_markup=kb_order_meal_category())
             await cd.answer()
         else:
-            kb_breakfasts = kb_add_in_cart_all_products(db_select_all_products("Завтрак"), page_number=0)
+            kb_breakfasts = kb_add_in_cart_all_products(db_select_products_for_generate_keyboard(products="Завтрак", offset=0), page_number=0, page_number_next=7)
             await cd.message.delete()
             await cd.message.answer(text="Завтраки", reply_markup=kb_breakfasts)
             await state.set_state(Client_state.breakfasts_quantity_selection_state)
@@ -79,7 +78,7 @@ async def handler_category_meal(cd: types.CallbackQuery, state: FSMContext):
             await cd.message.answer(text="Закончилось все из этой категории(", reply_markup=kb_order_meal_category())
             await cd.answer()
         else:
-            kb_sandwich = kb_add_in_cart_all_products(db_select_all_products("Сэндвич"), page_number=0)
+            kb_sandwich = kb_add_in_cart_all_products(db_select_products_for_generate_keyboard(products="Сэндвич", offset=0), page_number=0, page_number_next=7)
             await cd.message.delete()
             await cd.message.answer(text="Сэндвичи", reply_markup=kb_sandwich)
             await state.set_state(Client_state.sandwich_quantity_selection_state)
