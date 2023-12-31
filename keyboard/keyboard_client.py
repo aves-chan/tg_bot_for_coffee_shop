@@ -1,81 +1,70 @@
+import typing
+
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-def kb_phone_number():
-    button1 = [KeyboardButton(text="Отправить номер телефона", request_contact=True)]
-    kb = ReplyKeyboardMarkup(keyboard=[button1], resize_keyboard=True)
-    return kb
+
+class KB_client:
+    def phone_number(self) -> ReplyKeyboardMarkup:
+        button1 = [KeyboardButton(text="Отправить номер телефона", request_contact=True)]
+        kb = ReplyKeyboardMarkup(keyboard=[button1], resize_keyboard=True)
+        return kb
+
+    def start_client(self) -> InlineKeyboardMarkup:
+        button1 = [InlineKeyboardButton(text="Заказать", callback_data="Заказать")]
+        kb = InlineKeyboardMarkup(inline_keyboard=[button1])
+        return kb
+
+    def generate_product_categories_or_menu_product(self,
+            array: typing.List[str],
+            categories_or_subcategories_or_products: typing.Literal["categories", "subcategories", "products"],
+            back_button: str,
+            page_number: int,
+            page_number_next: int,
+            page_number_previous: typing.Optional[int] = None
+        ) -> InlineKeyboardMarkup:
+
+        kb = InlineKeyboardBuilder()
+        if categories_or_subcategories_or_products == "categories":
+            for values in array:
+                button = InlineKeyboardButton(text=values[0], callback_data=f"category_{values[0]}")
+                kb.add(button)
+        elif categories_or_subcategories_or_products == "subcategories":
+            for values in array:
+                button = InlineKeyboardButton(text=values[0], callback_data=f"subcategory_{values[0]}")
+                kb.add(button)
+        elif categories_or_subcategories_or_products == "products":
+            for values in array:
+                button = InlineKeyboardButton(text=values[0], callback_data=f"product_{values[0]}")
+                kb.add(button)
+        kb.adjust(2)
+        if len(array) > 6:
+            button1 = InlineKeyboardButton(text="<-", callback_data=f"page_category_{page_number_previous}")
+            button2 = InlineKeyboardButton(text=f"№{page_number}📄", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+            button3 = InlineKeyboardButton(text="->", callback_data=f"page_category_{page_number_next}")
+            button4 = InlineKeyboardButton(text=back_button, callback_data=back_button)
+            if page_number == 0:
+                kb.row(button2, button3, button4, width=3)
+            else:
+                kb.row(button1, button2, button3, button4, width=4)
+        else:
+            button1 = InlineKeyboardButton(text=back_button, callback_data=back_button)
+            kb.row(button1, width=1)
+        return kb.as_markup()
 
 
-def kb_start_client():
-    button1 = [InlineKeyboardButton(text="Заказать", callback_data="Заказать")]
-    kb = InlineKeyboardMarkup(inline_keyboard=[button1])
-    return kb
+    def product_add_to_cart(self, array_products: typing.Tuple) -> InlineKeyboardMarkup:
+        button1 = InlineKeyboardButton(text="-", callback_data="-")
+        button2 = InlineKeyboardButton(text="1", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+        button3 = InlineKeyboardButton(text="+", callback_data="+")
+        button4 = InlineKeyboardButton(text=f"В наличии: {array_products[5]}", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
+        button5 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
+        button6 = InlineKeyboardButton(text="Назад", callback_data="Назад")
+        kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5],[button6]])
+        return kb
 
-def kb_order_main_menu():
-    button1 = InlineKeyboardButton(text="Напитки 🥤", callback_data="Напитки")
-    button2 = InlineKeyboardButton(text="Еда 🥪", callback_data="Еда")
-    button3 = InlineKeyboardButton(text="Десерты 🍰", callback_data="Десерты")
-    button4 = InlineKeyboardButton(text="Корзина 🧺", callback_data="Корзина")
-    kb = InlineKeyboardMarkup(inline_keyboard=[[button1], [button2, button3], [button4]])
-    return kb
-
-
-""" ЕДА """
-def kb_order_meal_category():
-    button1 = InlineKeyboardButton(text="Завтраки", callback_data="Завтраки")
-    button2 = InlineKeyboardButton(text="Сэндвичи", callback_data="Сэндвичи")
-    button3 = InlineKeyboardButton(text="Назад к главному меню", callback_data="Назад к главному меню")
-    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
-    return kb
-
-def kb_adding_to_cart_meal_or_dessert(array_any_products):
-    button1 = InlineKeyboardButton(text="-", callback_data="-")
-    button2 = InlineKeyboardButton(text="1", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-    button3 = InlineKeyboardButton(text="+", callback_data="+")
-    button4 = InlineKeyboardButton(text=f"В наличии: {array_any_products[5]}", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-    button5 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
-    button6 = InlineKeyboardButton(text="Назад", callback_data="Назад")
-    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5],[button6]])
-    return kb
-
-def kb_adding_to_cart_drinks(product_count):
-    button1 = InlineKeyboardButton(text="-", callback_data="-")
-    button2 = InlineKeyboardButton(text=f"{product_count}шт", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-    button3 = InlineKeyboardButton(text="+", callback_data="+")
-    button4 = InlineKeyboardButton(text="Добавить в корзину", callback_data="Добавить")
-    button5 = InlineKeyboardButton(text="Назад", callback_data="Назад к выбору напитков")
-    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2, button3],[button4],[button5]])
-    return kb
-
-"""КОНЕЦ ЕДЫ """
-
-
-
-""" НАПИТКИ """
-
-def kb_order_drinks_category():
-    button1 = InlineKeyboardButton(text="Кофе", callback_data="Кофе")
-    button2 = InlineKeyboardButton(text="Чай", callback_data="Чай")
-    button3 = InlineKeyboardButton(text="Назад к главному меню", callback_data="Назад к главному меню")
-    kb = InlineKeyboardMarkup(inline_keyboard=[[button1, button2], [button3]])
-    return kb
-
-def kb_add_in_cart_all_products(array_products, page_number, page_number_next, page_number_previous=None):
-    kb = InlineKeyboardBuilder()
-    for values in array_products:
-        button = InlineKeyboardButton(text=values[1], callback_data=str(values[0]))
-        kb.add(button)
-    kb.adjust(2)
-    button1 = InlineKeyboardButton(text="<-", callback_data=f"page{page_number_previous}")
-    button2 = InlineKeyboardButton(text=f"№{page_number}📄", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-    button3 = InlineKeyboardButton(text="->", callback_data=f"page{page_number_next}")
-    button4 = InlineKeyboardButton(text="Назад", callback_data="Назад к выбору категорий")
-    if page_number == 0:
-        kb.row(button2, button3, button4, width=3)
-    else:
-        kb.row(button1, button2, button3, button4, width=4)
-    return kb.as_markup()
-
-""" КОНЕЦ НАПИТКОВ """
+    def error_when_searching_for_subcategories(self, back_button: str) -> InlineKeyboardMarkup:
+        button = [InlineKeyboardButton(text="Назад", callback_data=back_button)]
+        kb = InlineKeyboardMarkup(inline_keyboard=[button])
+        return kb
