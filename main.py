@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 
-from handlers.handlers_client.handlers_client_creating_shopping_cart.handlers_client_product_categories import \
+from handlers.handlers_client.handlers_client_creating_shopping_cart.handlers_client_product_menu import \
     client_product_menu_router
 from keyboard.keyboard_client import KB_client
 

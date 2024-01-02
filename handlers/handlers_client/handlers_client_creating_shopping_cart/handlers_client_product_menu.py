@@ -1,9 +1,11 @@
+import json
+
 from aiogram import Router, types, F
 from aiogram.enums import ParseMode
 
 from handlers.handlers_client.handlers_client_for_adding_user_to_database.handlers_registration_user import client_registration_router
 from sql_queries.db_client import DB_client
-from keyboard.keyboard_client import KB_client
+from keyboard.keyboard_client import KB_client, Decrease_or_addition_callback_factory
 
 client_product_menu_router = Router()
 client_product_menu_router.include_routers(client_registration_router)
@@ -84,13 +86,78 @@ async def handler_client_creating_product_menu(cd: types.CallbackQuery):
 async def handler_client_adds_in_cart_product(cd: types.CallbackQuery):
     data = cd.data[8:]
     product = db_client.select_product(data)
-    print(product)
     if product == None:
         await cd.message.delete()
         await cd.message.answer(text="Ошибка, к сожалению не смог найти продукт. Попробуйте позже или другой продукт",
                                 reply_markup=kb_client.error_when_searching_for_subcategories(back_button="Назад к категориям"))
         await cd.answer()
     else:
-        await cd.message.delete()
-        await cd.message.answer("Пока не сделано")
-        await cd.answer(show_alert=True, text="handler_client_adds_in_cart_product\n\nэтот обработчик реагирует")
+        if product[2] == None:
+            await cd.message.edit_text(text=f"""
+<b>Продукт:</b> {product[1]}
+
+<b>Описание:</b> {product[3]}
+
+<b>Цена:</b> {product[4]}p
+            """,
+            parse_mode=ParseMode.HTML,
+            reply_markup=kb_client.product_add_to_cart(product_array=product, product_quantity=1))
+        else:
+            await cd.message.delete()
+            await cd.message.answer("Пока не сделано")
+            await cd.answer(show_alert=True, text="handler_client_adds_in_cart_product\n\nэтот обработчик реагирует")
+
+@client_product_menu_router.callback_query(Decrease_or_addition_callback_factory.filter())
+async def handler_client_decrease_or_addition_product(cd: types.CallbackQuery, callback_data: Decrease_or_addition_callback_factory):
+    product = db_client.select_product(name_product=callback_data.name)
+    if callback_data.action == "-":
+        if callback_data.double_action == "T":
+            product_quantity = callback_data.count - 2
+            if product_quantity < 1:
+                await cd.answer(
+                    text="Минимальное значение может быть 1. Eсли Вы хотите выйти не добавив продукта нажмите кнопку назад",
+                    show_alert=True)
+            else:
+                await cd.message.edit_reply_markup(
+                    reply_markup=kb_client.product_add_to_cart(product_array=product,
+                                                               product_quantity=product_quantity))
+                await cd.answer()
+        elif callback_data.double_action == "F":
+            if callback_data.count <= 1:
+                await cd.answer(
+                    text="Минимальное значение может быть 1. Eсли Вы хотите выйти не добавив продукта нажмите кнопку назад",
+                    show_alert=True)
+            else:
+                product_quantity = callback_data.count - 1
+                await cd.message.edit_reply_markup(reply_markup=kb_client.product_add_to_cart(product_array=product,
+                                                                                              product_quantity=product_quantity))
+                await cd.answer()
+
+    elif callback_data.action == "+":
+        if callback_data.double_action == "T":
+            product_quantity = callback_data.count + 2
+            if product_quantity > 15:
+                await cd.answer(text="Максимальное значение может быть 15",
+                                show_alert=True)
+            else:
+                await cd.message.edit_reply_markup(
+                    reply_markup=kb_client.product_add_to_cart(product_array=product, product_quantity=product_quantity))
+                await cd.answer()
+        elif callback_data.double_action == "F":
+            if callback_data.count >= 15:
+                await cd.answer(text="Максимальное значение может быть 15",
+                                show_alert=True)
+            else:
+                product_quantity = callback_data.count + 1
+                await cd.message.edit_reply_markup(reply_markup=kb_client.product_add_to_cart(product_array=product, product_quantity=product_quantity))
+                await cd.answer()
+
+    elif callback_data.action == "stop":
+        client_cart = db_client.select_client_cart(cd.from_user.id)
+        if client_cart[0] == None:
+            dict_cart = {product[1]: callback_data.count}
+            json_cart = json.dumps(dict_cart)
+            db_client.change_in_cart(telegram_id=cd.from_user.id, new_cart=json_cart)
+            print(db_client.select_client_cart(telegram_id=cd.from_user.id))
+
+

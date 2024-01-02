@@ -18,6 +18,24 @@ class DB_client:
         cursor.close()
         conn.close()
 
+    def select_client_cart(self, telegram_id: int) -> typing.Dict:
+        conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT cart FROM users WHERE telegram_id = {telegram_id}")
+        cart_json = cursor.fetchone()
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return cart_json
+
+    def change_in_cart(self, telegram_id: int, new_cart) -> None:
+        conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE users SET cart = '{new_cart}' WHERE telegram_id = {telegram_id}")
+        conn.commit()
+        cursor.close()
+        conn.close()
+
     def select_categories(self) -> typing.List[str]:
         conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
         cursor = conn.cursor()
