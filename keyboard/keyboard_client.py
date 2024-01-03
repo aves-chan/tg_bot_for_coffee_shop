@@ -5,7 +5,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters.callback_data import CallbackData
 
-class Decrease_or_addition_callback_factory(CallbackData, prefix="AddDel"):
+class Decrease_or_addition_product_callback_factory(CallbackData, prefix="AddDel"):
     action: str
     name: typing.Optional[str]
     count: typing.Optional[int]
@@ -23,9 +23,10 @@ class KB_client:
         kb = ReplyKeyboardMarkup(keyboard=[button1], resize_keyboard=True)
         return kb
 
-    def start_client(self) -> InlineKeyboardMarkup:
-        button1 = [InlineKeyboardButton(text="Заказать", callback_data="Заказать")]
-        kb = InlineKeyboardMarkup(inline_keyboard=[button1])
+    def main_menu(self) -> InlineKeyboardMarkup:
+        buttons = [[InlineKeyboardButton(text="Меню продуктов", callback_data="Меню продуктов")],
+                   [InlineKeyboardButton(text="Корзина продуктов🛒", callback_data="Корзина продуктов")]]
+        kb = InlineKeyboardMarkup(inline_keyboard=buttons)
         return kb
 
     def generate_product_categories_or_menu_product(self,
@@ -68,16 +69,17 @@ class KB_client:
     def product_add_to_cart(self, product_array: typing.Tuple, product_quantity: int) -> InlineKeyboardMarkup:
         kb = InlineKeyboardBuilder()
         kb.button(text=f"Выбрали: {str(product_quantity)}", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-        kb.button(text="-2", callback_data=Decrease_or_addition_callback_factory(action="-", name=product_array[1], count=product_quantity, double_action="T"))
-        kb.button(text="-1", callback_data=Decrease_or_addition_callback_factory(action="-", name=product_array[1], count=product_quantity, double_action="F"))
-        kb.button(text="+1", callback_data=Decrease_or_addition_callback_factory(action="+", name=product_array[1], count=product_quantity, double_action="F"))
-        kb.button(text="+2", callback_data=Decrease_or_addition_callback_factory(action="+", name=product_array[1], count=product_quantity, double_action="T"))
+        kb.button(text="-2", callback_data=Decrease_or_addition_product_callback_factory(action="-", name=product_array[1], count=product_quantity, double_action="T"))
+        kb.button(text="-1", callback_data=Decrease_or_addition_product_callback_factory(action="-", name=product_array[1], count=product_quantity, double_action="F"))
+        kb.button(text="+1", callback_data=Decrease_or_addition_product_callback_factory(action="+", name=product_array[1], count=product_quantity, double_action="F"))
+        kb.button(text="+2", callback_data=Decrease_or_addition_product_callback_factory(action="+", name=product_array[1], count=product_quantity, double_action="T"))
         if product_array[5] != None:
             kb.button(text=f"В наличии: {product_array[5]}", callback_data="ЭТА КНОПКА ВИЗУАЛЬНАЯ")
-        kb.button(text="Добавить в корзину", callback_data=Decrease_or_addition_callback_factory(action="stop", name=product_array[1], count=product_quantity))
+        kb.button(text="Добавить в корзину🛒", callback_data=Decrease_or_addition_product_callback_factory(action="stop", name=product_array[1], count=product_quantity))
         kb.button(text="Назад", callback_data="Назад")
         kb.adjust(1, 4, 1, 1, 1)
         return kb.as_markup()
+
 
     def error_when_searching_for_subcategories(self, back_button: str) -> InlineKeyboardMarkup:
         button = [InlineKeyboardButton(text="Назад", callback_data=back_button)]

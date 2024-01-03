@@ -18,15 +18,15 @@ class DB_client:
         cursor.close()
         conn.close()
 
-    def select_client_cart(self, telegram_id: int) -> typing.Dict:
+    def select_products_from_cart(self, telegram_id: int) -> typing.List:
         conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
         cursor = conn.cursor()
-        cursor.execute(f"SELECT cart FROM users WHERE telegram_id = {telegram_id}")
-        cart_json = cursor.fetchone()
+        cursor.execute(f"SELECT name FROM products WHERE name = ANY(SELECT json_object_keys(cart) FROM users WHERE telegram_id = {telegram_id})")
+        products_from_cart = cursor.fetchall()
         conn.commit()
         cursor.close()
         conn.close()
-        return cart_json
+        return products_from_cart
 
     def change_in_cart(self, telegram_id: int, new_cart) -> None:
         conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
@@ -56,7 +56,7 @@ class DB_client:
         conn.close()
         return category
 
-    def select_products(self, subcategory: str) -> typing.List:
+    def select_products_names(self, subcategory: str) -> typing.List:
         conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL,host=config.IP_MY_SERVER, port="5432")
         cursor = conn.cursor()
         cursor.execute(f"SELECT name FROM products WHERE subcategory = '{subcategory}'")
@@ -88,4 +88,3 @@ class DB_client:
         cursor.close()
         conn.close()
         return products
-

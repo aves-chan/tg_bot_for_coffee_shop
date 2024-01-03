@@ -3,24 +3,22 @@ import json
 from aiogram import Router, types, F
 from aiogram.enums import ParseMode
 
-from handlers.handlers_client.handlers_client_for_adding_user_to_database.handlers_registration_user import client_registration_router
 from sql_queries.db_client import DB_client
-from keyboard.keyboard_client import KB_client, Decrease_or_addition_callback_factory
+from keyboard.keyboard_client import KB_client, Decrease_or_addition_product_callback_factory
 
 client_product_menu_router = Router()
-client_product_menu_router.include_routers(client_registration_router)
 
 kb_client = KB_client()
 
 db_client = DB_client()
 
-@client_product_menu_router.callback_query(F.data == "Заказать")
+@client_product_menu_router.callback_query(F.data == "Меню продуктов")
 async def handler_client_creating_product_categories(cd: types.CallbackQuery):
     categories = db_client.select_categories()
     if len(categories) == 0:
         await cd.message.delete()
         await cd.message.answer(text="Ошибка,к сожалению нет категорий. Попробуйте позже",
-                                reply_markup=kb_client.start_client())
+                                reply_markup=kb_client.main_menu())
         await cd.answer()
     else:
         await cd.message.edit_text(text="<b>Выбери категорию</b>",
@@ -66,7 +64,7 @@ async def handler_client_creating_product_subcategories(cd: types.CallbackQuery)
 @client_product_menu_router.callback_query(F.data.regexp('subcategory_\w+'))
 async def handler_client_creating_product_menu(cd: types.CallbackQuery):
     data = cd.data[12:]
-    products = db_client.select_products(data)
+    products = db_client.select_products_names(data)
     if len(products) == 0:
         await cd.message.delete()
         await cd.message.answer(text="Ошибка, к сожалению не смог найти подкатегорию. Попробуйте позже или другую подкатегорию",
@@ -107,8 +105,8 @@ async def handler_client_adds_in_cart_product(cd: types.CallbackQuery):
             await cd.message.answer("Пока не сделано")
             await cd.answer(show_alert=True, text="handler_client_adds_in_cart_product\n\nэтот обработчик реагирует")
 
-@client_product_menu_router.callback_query(Decrease_or_addition_callback_factory.filter())
-async def handler_client_decrease_or_addition_product(cd: types.CallbackQuery, callback_data: Decrease_or_addition_callback_factory):
+@client_product_menu_router.callback_query(Decrease_or_addition_product_callback_factory.filter())
+async def handler_client_decrease_or_addition_product(cd: types.CallbackQuery, callback_data: Decrease_or_addition_product_callback_factory):
     product = db_client.select_product(name_product=callback_data.name)
     if callback_data.action == "-":
         if callback_data.double_action == "T":
@@ -154,10 +152,17 @@ async def handler_client_decrease_or_addition_product(cd: types.CallbackQuery, c
 
     elif callback_data.action == "stop":
         client_cart = db_client.select_client_cart(cd.from_user.id)
-        if client_cart[0] == None:
-            dict_cart = {product[1]: callback_data.count}
-            json_cart = json.dumps(dict_cart)
-            db_client.change_in_cart(telegram_id=cd.from_user.id, new_cart=json_cart)
-            print(db_client.select_client_cart(telegram_id=cd.from_user.id))
-
-
+        product_to_add_to_cart = {product[1]: callback_data.count}
+        if client_cart == None:
+            new_cart = json.dumps(product_to_add_to_cart)
+            db_client.change_in_cart(telegram_id=cd.from_user.id, new_cart=new_cart)
+            await cd.message.delete()
+            await cd.message.answer(text="Продукт добавлен в корзину", reply_markup=kb_client.main_menu())
+            await cd.answer()
+        else:
+            client_cart.update(product_to_add_to_cart)
+            new_cart = json.dumps(client_cart)
+            db_client.change_in_cart(telegram_id=cd.from_user.id, new_cart=new_cart)
+            await cd.message.delete()
+            await cd.message.answer(text="Продукт добавлен в корзину", reply_markup=kb_client.main_menu())
+            await cd.answer()

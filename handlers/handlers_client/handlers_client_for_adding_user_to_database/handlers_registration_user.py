@@ -1,5 +1,4 @@
 from aiogram import Router, types, F
-from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
 from sql_queries.db_client import DB_client
@@ -19,4 +18,4 @@ async def handler_phone_number(msg: types.Message):
                            username=msg.from_user.username,
                            phone_number=msg.contact.phone_number)
     await msg.answer(text="Успешно!", reply_markup=ReplyKeyboardRemove())
-    await msg.answer(text="Добро пожаловать!", reply_markup=kb_client.start_client())
+    await msg.answer(text="Добро пожаловать!", reply_markup=kb_client.main_menu())
