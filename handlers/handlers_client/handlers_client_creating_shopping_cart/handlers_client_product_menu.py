@@ -10,6 +10,7 @@ client_product_menu_router = Router()
 
 kb_client = KB_client()
 
+
 db_client = DB_client()
 
 @client_product_menu_router.callback_query(F.data == "Меню продуктов")
@@ -33,7 +34,7 @@ async def handler_client_creating_product_categories(cd: types.CallbackQuery):
 @client_product_menu_router.callback_query(F.data == "Назад к категориям")
 async def handler_client_back_to_categories_button(cd: types.CallbackQuery):
     await cd.message.delete()
-    await cd.message.answer(text="Пока не сделано", reply_markup=kb_client.start_client())
+    await cd.message.answer(text="Пока не сделано", reply_markup=kb_client.main_menu())
     await cd.answer(show_alert=True, text="handler_client_back_to_categories_button\n\nэтот обработчик реагирует")
 
 @client_product_menu_router.callback_query(F.data.regexp('page_category_\d+'))
@@ -152,7 +153,7 @@ async def handler_client_decrease_or_addition_product(cd: types.CallbackQuery, c
 
     elif callback_data.action == "stop":
         client_cart = db_client.select_client_cart(cd.from_user.id)
-        product_to_add_to_cart = {product[1]: callback_data.count}
+        product_to_add_to_cart = {product[1]: [product[1], callback_data.count]}
         if client_cart == None:
             new_cart = json.dumps(product_to_add_to_cart)
             db_client.change_in_cart(telegram_id=cd.from_user.id, new_cart=new_cart)

@@ -1,15 +1,16 @@
 import typing
+from typing import Tuple, Any
 
 import psycopg2
 import config
 
 class DB_client:
     def add_new_user(self,
-             telegram_id: int,
-             firstname: str,
-             username: str,
-             phone_number: str
-        ) -> None:
+                     telegram_id: int,
+                     firstname: str,
+                     username: str,
+                     phone_number: str
+                     ) -> None:
 
         conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
         cursor = conn.cursor()
@@ -17,14 +18,24 @@ class DB_client:
         conn.commit()
         cursor.close()
         conn.close()
+    def select_client_cart(self, telegram_id: int) -> typing.Dict:
+        conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT cart FROM users WHERE telegram_id = {telegram_id}")
+        cart = cursor.fetchone()
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return cart[0]
 
     def select_products_from_cart(self, telegram_id: int) -> typing.List:
         conn = psycopg2.connect(dbname="coffee_shop", user="vsevolod", password=config.PASSWORD_POSTGRESQL, host=config.IP_MY_SERVER, port="5432")
         cursor = conn.cursor()
-        cursor.execute(f"SELECT name FROM products WHERE name = ANY(SELECT json_object_keys(cart) FROM users WHERE telegram_id = {telegram_id})")
-        products_from_cart = cursor.fetchall()
-        conn.commit()
-        cursor.close()
+        cursor.execute(f"""SELECT cart->products.name AS cart, products.price FROM users, products 
+                           WHERE products.name = ANY(SELECT json_object_keys(cart) FROM users) AND telegram_id = {telegram_id}""")
+        products_from_cart = cursor.fetchall()# [(['Капучино', 5], 300), (['Красный', 3], 150), (['блины', 2], 700)]
+        conn.commit()          #                      ^             ^           ^           ^        ^           ^
+        cursor.close()         #                     cart         price        cart       price     cart       price
         conn.close()
         return products_from_cart
 

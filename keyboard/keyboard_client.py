@@ -18,15 +18,15 @@ class Decrease_or_addition_product_callback_factory(CallbackData, prefix="AddDel
 
 
 class KB_client:
+    def main_menu(self) -> InlineKeyboardMarkup:
+        buttons = [[InlineKeyboardButton(text="Меню продуктов", callback_data="Меню продуктов")],
+                   [InlineKeyboardButton(text="Моя корзина🛒", callback_data="Моя корзина")]]
+        kb = InlineKeyboardMarkup(inline_keyboard=buttons)
+        return kb
+
     def phone_number(self) -> ReplyKeyboardMarkup:
         button1 = [KeyboardButton(text="Отправить номер телефона", request_contact=True)]
         kb = ReplyKeyboardMarkup(keyboard=[button1], resize_keyboard=True)
-        return kb
-
-    def main_menu(self) -> InlineKeyboardMarkup:
-        buttons = [[InlineKeyboardButton(text="Меню продуктов", callback_data="Меню продуктов")],
-                   [InlineKeyboardButton(text="Корзина продуктов🛒", callback_data="Корзина продуктов")]]
-        kb = InlineKeyboardMarkup(inline_keyboard=buttons)
         return kb
 
     def generate_product_categories_or_menu_product(self,
@@ -79,7 +79,6 @@ class KB_client:
         kb.button(text="Назад", callback_data="Назад")
         kb.adjust(1, 4, 1, 1, 1)
         return kb.as_markup()
-
 
     def error_when_searching_for_subcategories(self, back_button: str) -> InlineKeyboardMarkup:
         button = [InlineKeyboardButton(text="Назад", callback_data=back_button)]
