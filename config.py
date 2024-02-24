@@ -1,7 +1,40 @@
 import config_gitignore
+from sqlalchemy import Integer, String, Column, JSON, create_engine
+from sqlalchemy.orm import DeclarativeBase
+
 
 TOKEN = config_gitignore.TOKEN_GITIGNORE
 
-PASSWORD_POSTGRESQL = config_gitignore.PASSWORD_POSTGRESQL_GITIGNORE
 
-IP_MY_SERVER = config_gitignore.IP_MY_SERVER_GITIGNORE
+URL_POSTGRESQL = config_gitignore.URL_POSTGRESQL_GITIGNORE
+
+
+engine = create_engine(URL_POSTGRESQL)
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Users_db(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    telegram_id = Column(Integer, nullable=False)
+    firstname = Column(String)
+    username = Column(String)
+    phone_number = Column(String)
+    tag = Column(String, default='client')
+    cart = Column(JSON)
+
+
+class Products_db(Base):
+    __tablename__ = 'products'
+
+    name = Column(String, nullable=False, primary_key=True, unique=True)
+    description = Column(String)
+    photo = Column(String)
+    count = Column(Integer)
+    price = Column(Integer, nullable=False)
+    category = Column(String, nullable=False)
+    subcategory = Column(String, nullable=False)

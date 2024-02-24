@@ -2,3 +2,4 @@
 config_gitignore.py
 .DS_Store
 .idea
+.pyc

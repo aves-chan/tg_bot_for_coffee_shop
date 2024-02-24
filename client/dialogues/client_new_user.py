@@ -1,18 +1,22 @@
 from aiogram.enums import ParseMode, ContentType
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import Message
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Button, Row, RequestContact
+from aiogram_dialog.widgets.kbd import RequestContact
 from aiogram_dialog.widgets.markup.reply_keyboard import ReplyKeyboardFactory
-from aiogram_dialog.widgets.text import Const, Format, Multi, Jinja
+from aiogram_dialog.widgets.text import Const
 
+from database_queries import db_queries
 from client.client_state import Client_main_state, Client_new_user_state
 
 async def handler_phone_number(message: Message,
                                message_input: MessageInput,
                                manager: DialogManager
                                ) -> None:
-    await message.delete()
+    db_queries.add_new_user(telegram_id=message.from_user.id,
+                            firstname=message.from_user.first_name,
+                            username=message.from_user.username,
+                            phone_number=message.contact.phone_number)
     await manager.start(Client_main_state.main_menu)
 
 

@@ -1,14 +1,12 @@
-from aiogram.types import Message, CallbackQuery
-
 from aiogram.types import CallbackQuery
 from aiogram_dialog import (
     Dialog, Window, DialogManager,
 )
 from aiogram_dialog.widgets.kbd import Button, Row
-from aiogram_dialog.widgets.text import Const, Format, Multi
+from aiogram_dialog.widgets.text import Const, Format
 
 from client.client_state import Client_main_state, Client_profile_state
-
+from database_queries import db_queries
 
 message_text_for_profile = """
 Имя: {first_name}
@@ -29,11 +27,12 @@ async def on_click_back(callback_query: CallbackQuery,
 
 
 async def getter_profile(dialog_manager: DialogManager, **kwargs):
+    user = db_queries.get_profile(telegram_id=dialog_manager.event.from_user.id)
     return {
-        "first_name": dialog_manager.event.from_user.first_name,
-        "username": dialog_manager.event.from_user.username,
-        "user_id": dialog_manager.event.from_user.id,
-        "phone_number": "None",
+        "first_name": user.firstname,
+        "username": user.username,
+        "user_id": user.telegram_id,
+        "phone_number": user.phone_number
     }
 
 dialog_profile = Dialog(
