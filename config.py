@@ -17,19 +17,19 @@ class Base(DeclarativeBase):
 
 
 class Users_db(Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     telegram_id = Column(Integer, nullable=False)
     firstname = Column(String)
     username = Column(String)
     phone_number = Column(String)
-    tag = Column(String, default='client')
+    tag = Column(String, default="client")
     cart = Column(JSON)
 
 
 class Products_db(Base):
-    __tablename__ = 'products'
+    __tablename__ = "products"
 
     name = Column(String, nullable=False, primary_key=True, unique=True)
     description = Column(String)

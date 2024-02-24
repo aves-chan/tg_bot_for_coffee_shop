@@ -3,7 +3,7 @@ import typing
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 
-from config import engine, Users_db
+from config import engine, Users_db, Products_db
 
 
 class DB_queries:
@@ -17,11 +17,11 @@ class DB_queries:
             return user
 
     def set_new_user(self,
-                           telegram_id: int,
-                           firstname: str,
-                           username: str,
-                           phone_number: str
-                           ) -> None:
+                     telegram_id: int,
+                     firstname: str,
+                     username: str,
+                     phone_number: str
+                     ) -> None:
         with Session(bind=self.__engine, autoflush=self.__autoflush) as db:
             user = Users_db(telegram_id=telegram_id,
                             firstname=firstname,
@@ -34,6 +34,11 @@ class DB_queries:
         with Session(bind=self.__engine, autoflush=self.__autoflush) as db:
             user = db.query(Users_db).filter(Users_db.telegram_id == telegram_id).first()
             return user
+
+    def get_categories(self) -> typing.List:
+        with Session(bind=self.__engine, autoflush=self.__autoflush) as db:
+            categories = db.query(Products_db.category).all()
+            return categories
 
 
 db_queries = DB_queries(engine=engine)

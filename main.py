@@ -10,6 +10,7 @@ from aiogram_dialog import (DialogManager, setup_dialogs, StartMode)
 from client.dialogues.client_main_menu import dialog_main
 from client.client_state import Client_main_state, Client_new_user_state
 from client.dialogues.client_new_user import dialog_new_user
+from client.dialogues.client_product_menu import dialog_product_menu
 from client.dialogues.client_profile_menu import dialog_profile
 from config import TOKEN
 from database_queries import db_queries
@@ -21,7 +22,7 @@ bot = Bot(token=TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-dp.include_routers(dialog_main, dialog_profile, dialog_new_user)
+dp.include_routers(dialog_main, dialog_profile, dialog_new_user, dialog_product_menu)
 setup_dialogs(dp)
 
 
