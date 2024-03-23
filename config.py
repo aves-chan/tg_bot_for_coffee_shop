@@ -16,7 +16,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class Users_db(Base):
+class UsersDB(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -28,7 +28,7 @@ class Users_db(Base):
     cart = Column(JSON)
 
 
-class Products_db(Base):
+class ProductsDB(Base):
     __tablename__ = "products"
 
     name = Column(String, nullable=False, primary_key=True, unique=True)
