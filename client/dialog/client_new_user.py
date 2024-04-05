@@ -7,7 +7,7 @@ from aiogram_dialog.widgets.markup.reply_keyboard import ReplyKeyboardFactory
 from aiogram_dialog.widgets.text import Const
 
 from database_queries import db_queries
-from client.client_state import Client_main_state, Client_new_user_state
+from client.client_state import ClientMainState, ClientNewUserState
 
 async def handler_phone_number(message: Message,
                                message_input: MessageInput,
@@ -17,7 +17,7 @@ async def handler_phone_number(message: Message,
                             firstname=message.from_user.first_name,
                             username=message.from_user.username,
                             phone_number=message.contact.phone_number)
-    await manager.start(Client_main_state.main_menu)
+    await manager.start(ClientMainState.main_menu)
 
 
 dialog_new_user = Dialog(
@@ -27,6 +27,6 @@ dialog_new_user = Dialog(
         RequestContact(Const(text="Отправить номер телефона")),
         parse_mode=ParseMode.HTML,
         markup_factory=ReplyKeyboardFactory(),
-        state=Client_new_user_state.phone_number
+        state=ClientNewUserState.phone_number
     )
 )

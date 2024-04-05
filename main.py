@@ -8,7 +8,7 @@ from aiogram.types import Message
 from aiogram_dialog import (DialogManager, setup_dialogs, StartMode)
 
 from client.dialog.client_main_menu import dialog_main
-from client.client_state import Client_main_state, Client_new_user_state
+from client.client_state import ClientMainState, ClientNewUserState
 from client.dialog.client_new_user import dialog_new_user
 from client.dialog.client_product_menu import dialog_product_menu
 from client.dialog.client_profile_menu import dialog_profile
@@ -30,9 +30,9 @@ setup_dialogs(dp)
 async def start(message: Message, dialog_manager: DialogManager):
     user = db_queries.check_user(telegram_id=message.from_user.id)
     if user == None:
-        await dialog_manager.start(Client_new_user_state.phone_number, mode=StartMode.RESET_STACK)
+        await dialog_manager.start(ClientNewUserState.phone_number, mode=StartMode.RESET_STACK)
     else:
-        await dialog_manager.start(Client_main_state.main_menu, mode=StartMode.RESET_STACK)
+        await dialog_manager.start(ClientMainState.main_menu, mode=StartMode.RESET_STACK)
 
 
 if __name__ == '__main__':

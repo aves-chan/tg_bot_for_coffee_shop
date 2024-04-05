@@ -6,7 +6,7 @@ from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, Row, Group, ScrollingGroup, Cancel
 from aiogram_dialog.widgets.text import Const, Format, Multi, Jinja
 
-from client.client_state import Client_catalog_state
+from client.client_state import ClientCatalogState
 from database_queries import db_queries
 
 
@@ -34,7 +34,7 @@ dialog_product_menu = Dialog(
             Cancel(text=Const(text="Назад"))
         ),
         parse_mode="HTML",
-        state=Client_catalog_state.category_menu
+        state=ClientCatalogState.category_menu
 
     )
 )

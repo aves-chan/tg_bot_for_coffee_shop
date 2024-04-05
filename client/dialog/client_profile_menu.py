@@ -5,7 +5,7 @@ from aiogram_dialog import (
 from aiogram_dialog.widgets.kbd import Button, Row
 from aiogram_dialog.widgets.text import Const, Format
 
-from client.client_state import Client_main_state, Client_profile_state
+from client.client_state import ClientMainState, ClientProfileState
 from database_queries import db_queries
 
 message_text_for_profile = """
@@ -23,7 +23,7 @@ async def on_click_back(callback_query: CallbackQuery,
                         button: Button,
                         dialog_manager: DialogManager
                         ) -> None:
-    await dialog_manager.start(state=Client_main_state.main_menu)
+    await dialog_manager.start(state=ClientMainState.main_menu)
 
 
 async def getter_profile(dialog_manager: DialogManager, **kwargs):
@@ -47,6 +47,6 @@ dialog_profile = Dialog(
             Button(Const(text="Корзина"), id="_cart")
         ),
         getter=getter_profile,
-        state=Client_profile_state.profile
+        state=ClientProfileState.profile
     )
 )
